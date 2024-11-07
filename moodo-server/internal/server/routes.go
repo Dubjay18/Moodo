@@ -1,6 +1,7 @@
 package server
 
 import (
+	"moodo-server/internal/middleware"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -8,9 +9,10 @@ import (
 
 func (s *Server) RegisterRoutes() http.Handler {
 	r := gin.Default()
-
-	r.GET("/", s.HelloWorldHandler)
-
+	apiVersion := r.Group("/api/v1")
+	protected := apiVersion.Group("/")
+	protected.Use(middleware.AuthMiddleware(s.authClient))
+	protected.GET("/", s.HelloWorldHandler)
 	r.GET("/health", s.healthHandler)
 
 	return r
