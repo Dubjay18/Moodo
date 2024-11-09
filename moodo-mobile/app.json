@@ -28,12 +28,14 @@
       "output": "static",
       "favicon": "./assets/images/favicon.png"
     },
-    "plugins": [
-      "expo-router",
-      "expo-secure-store"
-    ],
+    "plugins": ["expo-router", "expo-secure-store", "expo-font"],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "eas": {
+        "projectId": "d1dba7df-b403-41b9-9932-11ee3de008c2"
+      }
     }
   }
 }
