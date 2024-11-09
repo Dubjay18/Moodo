@@ -13,6 +13,10 @@ func (s *Server) RegisterRoutes() http.Handler {
 	protected := apiVersion.Group("/")
 	protected.Use(middleware.AuthMiddleware(s.authClient))
 	protected.GET("/", s.HelloWorldHandler)
+	movies := protected.Group("/movies")
+	{
+		movies.GET("/mood/:mood", s.GetMoviesByMoodHandler)
+	}
 	r.GET("/health", s.healthHandler)
 
 	return r
