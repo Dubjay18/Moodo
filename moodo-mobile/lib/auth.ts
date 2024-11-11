@@ -24,6 +24,13 @@ export async function login(email: string, password: string) {
   }
 }
 
+export async function logout() {
+  try {
+    await auth.signOut();
+  } catch (error) {
+    console.log(error);
+  }
+}
 export async function storeToken(token: string) {
   try {
     await secureSave(authConstants.AUTH_TOKEN_KEY, token);
