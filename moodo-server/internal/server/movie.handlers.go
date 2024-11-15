@@ -1,6 +1,7 @@
 package server
 
 import (
+	"moodo-server/internal/lib"
 	"moodo-server/internal/services"
 	"net/http"
 	"strconv"
@@ -8,7 +9,10 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// Gin handler for mood-based movie recommendations with pagination
+const (
+	GetMoviesSuccessMessage = "Successfully fetched movies"
+)
+
 func (s *Server) GetMoviesByMoodHandler(c *gin.Context) {
 	mood := c.Param("mood")
 	pageQuery := c.Query("page")
@@ -23,15 +27,10 @@ func (s *Server) GetMoviesByMoodHandler(c *gin.Context) {
 		}
 	}
 
-	movies, currentPage, totalPages, err := services.RecommendMoviesByMood(mood, page)
+	movies, _, _, err := services.RecommendMoviesByMood(mood, page)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		lib.BuildErrorResponse(c, err, err.Error(), http.StatusInternalServerError)
 		return
 	}
-
-	c.JSON(http.StatusOK, gin.H{
-		"movies":      movies,
-		"page":        currentPage,
-		"total_pages": totalPages,
-	})
+	lib.BuildResponse[[]services.Movie](c, movies, GetMoviesSuccessMessage, http.StatusOK)
 }
